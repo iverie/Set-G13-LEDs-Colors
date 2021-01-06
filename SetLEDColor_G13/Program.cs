@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -23,10 +24,13 @@ namespace SetLEDColor_G13
         static void Main(string[] args)
         {
             /* Kills previous process if it exists, so that there are not two instances accessing the driver */
-            Process[] pname = Process.GetProcessesByName(AppDomain.CurrentDomain.FriendlyName.Remove(AppDomain.CurrentDomain.FriendlyName.Length - 4));
+            Process[] pname = Process.GetProcessesByName(AppDomain.CurrentDomain.FriendlyName);
             if (pname.Length > 1)
             {
-                pname.Where(p => p.Id != Process.GetCurrentProcess().Id).First().Kill();
+                foreach (Process proc in pname.Where(p => p.Id != Process.GetCurrentProcess().Id))
+                {
+                    proc.Kill();
+                }
             }
 
             int r, g, b;
